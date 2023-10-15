@@ -5,5 +5,7 @@ namespace Application.Data;
 
 public interface IApplicationDBContext
 {
-    DbSet<Customer>
+    DbSet<Customer> Customers { get; set; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
