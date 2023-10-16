@@ -1,11 +1,12 @@
 ﻿using Domain.Customers;
 using Domain.Primitives;
 using Domain.ValueObjects;
+using ErrorOr;
 using MediatR;
 
 namespace Application.Customers.Create
 {
-    internal sealed class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, Unit>
+    internal sealed class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, ErrorOr<Unit>>
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -16,26 +17,33 @@ namespace Application.Customers.Create
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Unit> Handle(CreateCustomerCommand command, CancellationToken cancellationToken)
+        public async Task<ErrorOr<Unit>> Handle(CreateCustomerCommand command, CancellationToken cancellationToken)
         {
-            if (PhoneNumber.Create(command.PhoneNumber) is not PhoneNumber phoneNumber) throw new ArgumentException(nameof(phoneNumber));
+            try
+            {
+                if (PhoneNumber.Create(command.PhoneNumber) is not PhoneNumber phoneNumber) return Error.Validation("Customer.PhoneNumber", "Telefono no es un tipo válido");
 
-            if (Address.Create(command.Country, command.Line1, command.Line2, command.City, command.State, command.ZipCode) is not Address address) throw new ArgumentException(nameof(address));
+                if (Address.Create(command.Country, command.Line1, command.Line2, command.City, command.State, command.ZipCode) is not Address address) return Error.Validation("Customer.Address", "Dirección no tiene un formato válido");
 
-            var customer = new Customer(
-                new CustomerId(Guid.NewGuid()),
-                command.Name,
-                command.LastName,
-                command.Email,
-                phoneNumber,
-                address,
-                true
-            );
+                var customer = new Customer(
+                    new CustomerId(Guid.NewGuid()),
+                    command.Name,
+                    command.LastName,
+                    command.Email,
+                    phoneNumber,
+                    address,
+                    true
+                );
 
-            await _customerRepository.Add(customer);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+                _customerRepository.Add(customer);
+                await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+                return Unit.Value;
+            }
+            catch (Exception e)
+            {
+                return Error.Failure("CreateCustomer.Failure", e.Message);
+            }
         }
     }
 }

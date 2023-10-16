@@ -12,7 +12,11 @@ public class CustomerRepository : ICustomerRepository
         _context = context ?? throw new AggregateException(nameof(context));
     }
 
-    public async Task Add(Customer customer) => await _context.Customers.AddAsync(customer);
+    public void Add(Customer customer) => _context.Customers.Add(customer);
+    public void Update(Customer customer) => _context.Customers.Update(customer);
+    public void Delete(Customer customer) => _context.Customers.Remove(customer);
 
+    public async Task<List<Customer>> GetAll() => await _context.Customers.Where(c => c.Active == true).ToListAsync();
     public async Task<Customer?> GetByIdAsync(CustomerId id) => await _context.Customers.SingleOrDefaultAsync(c => c.Id == id);
+    public async Task<bool> ExistAsync(CustomerId id) => await _context.Customers.AnyAsync(c => c.Active == true);
 }

@@ -1,8 +1,9 @@
 ﻿/*
  * Se implementa el patrín CQRS
  * Leer más sobre dicho patrón en la documentación de Microsoft .NET
-*/
+ */
 
+using ErrorOr;
 using MediatR;
 
 namespace Application.Customers.Create
@@ -18,5 +19,5 @@ namespace Application.Customers.Create
         string City,
         string State,
         string ZipCode
-    ) : IRequest<Unit>;
+    ) : IRequest<ErrorOr<Unit>>;
 }
