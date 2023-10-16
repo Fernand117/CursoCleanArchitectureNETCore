@@ -25,7 +25,7 @@ public class CustomersController : ApiController
         return createCustomerResult.Match(customer => Ok(), errors => Problem(errors));
     }
 
-    [HttpPut("/id/{id}")]
+    [HttpPut("id/{Id}")]
     public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateCustomerCommand command)
     {
         if (command.Id != Id)
