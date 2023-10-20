@@ -1,4 +1,7 @@
 ﻿using Application.Customers.Create;
+using Application.Customers.Delete;
+using Application.Customers.ReadAll;
+using Application.Customers.ReadById;
 using Application.Customers.Update;
 using ErrorOr;
 using MediatR;
@@ -15,6 +18,26 @@ public class CustomersController : ApiController
     public CustomersController(ISender mediator)
     {
         _mediator = mediator ?? throw new ArgumentException(nameof(mediator));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var customersResult = await _mediator.Send(new ReadAllCustomerCommand());
+
+        return customersResult.Match(
+            customers => Ok(customers),
+            errors => Problem(errors));
+    }
+
+    [HttpGet("id/{Id}")]
+    public async Task<IActionResult> GetById(Guid Id)
+    {
+        var customerResult = await _mediator.Send(new ReadByIdCommand(Id));
+
+        return customerResult.Match(
+            customer => Ok(customer),
+            error => Problem(error));
     }
 
     [HttpPost]
@@ -43,5 +66,15 @@ public class CustomersController : ApiController
             customerId => NoContent(),
             errors => Problem(errors)
         );
+    }
+
+    [HttpDelete("id/{Id}")]
+    public async Task<IActionResult> Delete(Guid Id)
+    {
+        var deleteResult = await _mediator.Send(new DeleteCustomerCommand(Id));
+
+        return deleteResult.Match(
+            customerId => NoContent(),
+            errors => Problem(errors));
     }
 }
