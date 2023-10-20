@@ -1,5 +1,6 @@
 ﻿using Application.Data;
 using Domain.Customers;
+using Domain.Employes;
 using Domain.Primitives;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace Infrastructure.Persistence
         }
 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Employe> Employes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDBContext).Assembly);
