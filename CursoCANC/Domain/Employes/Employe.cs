@@ -23,7 +23,7 @@ public class Employe : AgregateRoot
     public DateTime FechaNacimiento { get; private set; }
     public bool Active { get; private set; }
     
-    public Employe UpdateEmploye(Guid id, string nombre, string paterno, string materno, DateTime fechaNacimiento, bool active)
+    public static Employe UpdateEmploye(Guid id, string nombre, string paterno, string materno, DateTime fechaNacimiento, bool active)
     {
         return new Employe(new EmployeId(id), nombre, paterno, materno, fechaNacimiento, active);
     }
