@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class EmployeMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,6 +33,22 @@ namespace Infrastructure.Persistence.Migrations
                     table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Employes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Nombre = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Paterno = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Materno = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    FechaNacimiento = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Active = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employes", x => x.Id);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_Email",
                 table: "Customers",
@@ -45,6 +61,9 @@ namespace Infrastructure.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Employes");
         }
     }
 }

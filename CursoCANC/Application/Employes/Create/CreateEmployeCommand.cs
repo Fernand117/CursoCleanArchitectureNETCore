@@ -1,11 +1,13 @@
 using ErrorOr;
 using MediatR;
 
-namespace Application.Employes.Create;
+namespace Application.Employes.Create
+{ 
+    public record CreateEmployeCommand(
+        string Nombre,
+        string Paterno,
+        string Materno,
+        DateTime FechaNacimiento
+    ) : IRequest<ErrorOr<Unit>>;
+}
 
-public record CreateEmployeCommand(
-    string Nombre,
-    string Paterno,
-    string Materno,
-    DateTime FechaNacimiento
-) : IRequest<ErrorOr<Unit>>;

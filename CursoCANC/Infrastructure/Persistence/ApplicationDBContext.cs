@@ -18,6 +18,7 @@ namespace Infrastructure.Persistence
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Employe> Employes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDBContext).Assembly);

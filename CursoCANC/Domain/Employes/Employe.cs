@@ -2,9 +2,9 @@ using Domain.Primitives;
 
 namespace Domain.Employes;
 
-public class Employe : AgregateRoot
+public sealed class Employe : AgregateRoot
 {
-    public Employe(){}
+    private Employe(){}
 
     public Employe(EmployeId id, string nombre, string paterno, string materno, DateTime fechaNacimiento, bool active)
     {
@@ -17,9 +17,9 @@ public class Employe : AgregateRoot
     }
 
     public EmployeId Id { get; private set; }
-    public string Nombre { get; private set; }
-    public string Paterno { get; private set; }
-    public string Materno { get; private set; }
+    public string Nombre { get; private set; } = string.Empty;
+    public string Paterno { get; private set; } = string.Empty;
+    public string Materno { get; private set; } = string.Empty;
     public DateTime FechaNacimiento { get; private set; }
     public bool Active { get; private set; }
     

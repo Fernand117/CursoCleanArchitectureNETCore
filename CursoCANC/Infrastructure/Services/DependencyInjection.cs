@@ -1,5 +1,6 @@
 ﻿using Application.Data;
 using Domain.Customers;
+using Domain.Employes;
 using Domain.Primitives;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
@@ -24,7 +25,9 @@ public static class DependencyInjection
         services.AddScoped<IApplicationDBContext>(sp => sp.GetRequiredService<ApplicationDBContext>());
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDBContext>());
 
+        // AÑADIR LOS REPOSITORY CON SUS INTERFACES SIEMPRE QUE SE CREA UNO NUEVO
         services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IEmployeRepository, EmployeRepository>();
         
         return services;
     }
