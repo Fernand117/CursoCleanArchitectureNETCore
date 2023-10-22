@@ -3,6 +3,7 @@ using Application.Employes.Delete;
 using Application.Employes.ReadAll;
 using Application.Employes.ReadById;
 using Application.Employes.Update;
+using CCANC.API.Common;
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +22,25 @@ public class EmployeController : ApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<ApiResponse>> GetAll()
     {
+        ApiResponse apiResponse = new ApiResponse();
         var employersResult = await _mediator.Send(new ReadAllEmployeCommand());
 
-        return employersResult.Match(
-            employe => Ok(employe),
-            errors => Problem(errors)
-        );
+        try
+        {
+            apiResponse.ResponseCode = 200;
+            apiResponse.ResponseText = "Transacción completada";
+            apiResponse.Data = employersResult.Value;
+        }
+        catch (Exception e)
+        {
+            apiResponse.ResponseCode = 404;
+            apiResponse.ResponseText = "Error en la transacción";
+            apiResponse.Data = employersResult.Errors;
+        }
+
+        return apiResponse;
     }
 
     [HttpGet("id/{Id}")]
