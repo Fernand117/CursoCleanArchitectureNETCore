@@ -4,6 +4,8 @@ using Application.Employes.ReadAll;
 using Application.Employes.ReadById;
 using Application.Employes.Update;
 using CCANC.API.Common;
+using CCANC.API.Common.ENUMS;
+using CCANC.API.Common.Resources;
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,14 +31,14 @@ public class EmployeController : ApiController
 
         try
         {
-            apiResponse.ResponseCode = 200;
-            apiResponse.ResponseText = "Transacción completada";
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
             apiResponse.Data = employersResult.Value;
         }
         catch (Exception e)
         {
-            apiResponse.ResponseCode = 404;
-            apiResponse.ResponseText = "Error en la transacción";
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
             apiResponse.Data = employersResult.Errors;
         }
 
@@ -44,50 +46,90 @@ public class EmployeController : ApiController
     }
 
     [HttpGet("id/{Id}")]
-    public async Task<IActionResult> GetById(Guid Id)
+    public async Task<ActionResult<ApiResponse>> GetById(Guid Id)
     {
+        ApiResponse apiResponse = new ApiResponse();
         var employerResult = await _mediator.Send(new ReadByIdEmployeCommand(Id));
 
-        return employerResult.Match(
-            employer => Ok(employer),
-            error => Problem(error)
-        );
+        try
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = employerResult.Value;
+        }
+        catch (Exception e)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = employerResult.Errors;
+        }
+        
+        return apiResponse;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateEmployeCommand command)
+    public async Task<ActionResult<ApiResponse>> Create([FromBody] CreateEmployeCommand command)
     {
+        ApiResponse apiResponse = new ApiResponse();
         var createEmployeResult = await _mediator.Send(command);
 
-        return createEmployeResult.Match(employe => Ok(), errors => Problem(errors));
+        try
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = createEmployeResult.Value;
+        }
+        catch (Exception e)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = createEmployeResult.Errors;
+        }
+
+        return apiResponse;
     }
 
     [HttpPut("id/{Id}")]
-    public async Task<IActionResult> Update(Guid Id, [FromBody] UpdateEmployeCommand command)
+    public async Task<ActionResult<ApiResponse>> Update(Guid Id, [FromBody] UpdateEmployeCommand command)
     {
-        if (command.Id != Id)
+        ApiResponse apiResponse = new ApiResponse();
+        var updateResult = await _mediator.Send(command);
+        
+        try
         {
-            List<Error> errors = new()
-            {
-                Error.Validation("Employe.UpdateInfo", "The request ID does not match with the url ID.")
-            };
-
-            return Problem();
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = updateResult.Value;
+        }
+        catch (Exception e)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = updateResult.Errors;
         }
 
-        var updateResult = await _mediator.Send(command);
-
-        return updateResult.Match(employeId => NoContent(), errors => Problem(errors));
+        return apiResponse;
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(Guid Id)
+    public async Task<ActionResult<ApiResponse>> Delete(Guid Id)
     {
+        ApiResponse apiResponse = new ApiResponse();
         var deleteResult = await _mediator.Send(new DeleteEmployeCommand(Id));
 
-        return deleteResult.Match(
-            employeId => NoContent(),
-            errors => Problem(errors)
-        );
+        try
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = deleteResult.Value;
+        }
+        catch (Exception e)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = deleteResult.Errors;
+        }
+
+        return apiResponse;
     }
 }
