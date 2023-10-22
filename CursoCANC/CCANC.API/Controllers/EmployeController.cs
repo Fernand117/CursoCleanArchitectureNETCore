@@ -29,10 +29,18 @@ public class EmployeController : ApiController
         ApiResponse apiResponse = new ApiResponse();
         var employersResult = await _mediator.Send(new ReadAllEmployeCommand());
         
-        apiResponse.ResponseCode = EnumResponse.Success;
-        apiResponse.ResponseText = ApiResources.MensajeOk;
-        apiResponse.Data = employersResult.Value;
-        if (employersResult.IsError) apiResponse.Data = employersResult.Errors;
+        if (employersResult.IsError)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = employersResult.Errors;
+        }
+        else
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = employersResult.Value;
+        }
         
         return apiResponse;
     }
@@ -43,10 +51,18 @@ public class EmployeController : ApiController
         ApiResponse apiResponse = new ApiResponse();
         var employerResult = await _mediator.Send(new ReadByIdEmployeCommand(Id));
         
-        apiResponse.ResponseCode = EnumResponse.Success;
-        apiResponse.ResponseText = ApiResources.MensajeOk;
-        apiResponse.Data = employerResult.Value;
-        if (employerResult.IsError) apiResponse.Data = employerResult.Errors;
+        if (employerResult.IsError)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = employerResult.Errors;
+        }
+        else
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = employerResult.Value;
+        }
         
         return apiResponse;
     }
@@ -57,10 +73,18 @@ public class EmployeController : ApiController
         ApiResponse apiResponse = new ApiResponse();
         var createEmployeResult = await _mediator.Send(command);
         
-        apiResponse.ResponseCode = EnumResponse.Success;
-        apiResponse.ResponseText = ApiResources.MensajeOk;
-        apiResponse.Data = createEmployeResult.Value;
-        if(createEmployeResult.IsError) apiResponse.Data = createEmployeResult.Errors;
+        if(createEmployeResult.IsError)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError; 
+            apiResponse.Data = createEmployeResult.Errors;
+        }
+        else
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = createEmployeResult.Value;
+        }
 
         return apiResponse;
     }
@@ -71,10 +95,18 @@ public class EmployeController : ApiController
         ApiResponse apiResponse = new ApiResponse();
         var updateResult = await _mediator.Send(command);
         
-        apiResponse.ResponseCode = EnumResponse.Success;
-        apiResponse.ResponseText = ApiResources.MensajeOk;
-        apiResponse.Data = updateResult.Value;
-        if (updateResult.IsError) apiResponse.Data = updateResult.Errors;
+        if (updateResult.IsError)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = updateResult.Errors;
+        }
+        else
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = updateResult.Value;
+        }
         
         return apiResponse;
     }
@@ -84,11 +116,19 @@ public class EmployeController : ApiController
     {
         ApiResponse apiResponse = new ApiResponse();
         var deleteResult = await _mediator.Send(new DeleteEmployeCommand(Id));
-
-        apiResponse.ResponseCode = EnumResponse.Success;
-        apiResponse.ResponseText = ApiResources.MensajeOk;
-        apiResponse.Data = deleteResult.Value;
-        if (deleteResult.IsError) apiResponse.Data = deleteResult.Errors;
+        
+        if (deleteResult.IsError)
+        {
+            apiResponse.ResponseCode = EnumResponse.Error;
+            apiResponse.ResponseText = ApiResources.MensajeError;
+            apiResponse.Data = deleteResult.Errors;
+        }
+        else
+        {
+            apiResponse.ResponseCode = EnumResponse.Success;
+            apiResponse.ResponseText = ApiResources.MensajeOk;
+            apiResponse.Data = deleteResult.Value;
+        }
 
         return apiResponse;
     }
