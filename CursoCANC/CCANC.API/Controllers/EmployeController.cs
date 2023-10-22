@@ -1,4 +1,7 @@
 using Application.Employes.Create;
+using Application.Employes.Delete;
+using Application.Employes.ReadAll;
+using Application.Employes.ReadById;
 using Application.Employes.Update;
 using ErrorOr;
 using MediatR;
@@ -15,6 +18,28 @@ public class EmployeController : ApiController
     public EmployeController(ISender mediator)
     {
         _mediator = mediator ?? throw new ArgumentException(nameof(mediator));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var employersResult = await _mediator.Send(new ReadAllEmployeCommand());
+
+        return employersResult.Match(
+            employe => Ok(employe),
+            errors => Problem(errors)
+        );
+    }
+
+    [HttpGet("id/{Id}")]
+    public async Task<IActionResult> GetById(Guid Id)
+    {
+        var employerResult = await _mediator.Send(new ReadByIdEmployeCommand(Id));
+
+        return employerResult.Match(
+            employer => Ok(employer),
+            error => Problem(error)
+        );
     }
 
     [HttpPost]
@@ -41,5 +66,16 @@ public class EmployeController : ApiController
         var updateResult = await _mediator.Send(command);
 
         return updateResult.Match(employeId => NoContent(), errors => Problem(errors));
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete(Guid Id)
+    {
+        var deleteResult = await _mediator.Send(new DeleteEmployeCommand(Id));
+
+        return deleteResult.Match(
+            employeId => NoContent(),
+            errors => Problem(errors)
+        );
     }
 }
