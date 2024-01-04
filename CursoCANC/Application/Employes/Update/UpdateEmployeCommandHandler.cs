@@ -35,6 +35,8 @@ namespace Application.Employes.Update
             catch (Exception e)
             {
                 return Error.Failure("UpdateEmploye.Failure", e.Message);
+
+
             }
         }
     }

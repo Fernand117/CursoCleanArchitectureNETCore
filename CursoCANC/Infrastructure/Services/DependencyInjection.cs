@@ -2,7 +2,9 @@
 using Domain.Customers;
 using Domain.Employes;
 using Domain.Primitives;
+using Domain.Users;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Configuration;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +30,7 @@ public static class DependencyInjection
         // AÑADIR LOS REPOSITORY CON SUS INTERFACES SIEMPRE QUE SE CREA UNO NUEVO
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IEmployeRepository, EmployeRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         
         return services;
     }

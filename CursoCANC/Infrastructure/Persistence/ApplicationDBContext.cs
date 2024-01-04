@@ -2,6 +2,7 @@
 using Domain.Customers;
 using Domain.Employes;
 using Domain.Primitives;
+using Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace Infrastructure.Persistence
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Employe> Employes { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
